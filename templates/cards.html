@@ -142,8 +142,7 @@
 	  $( 'button#exit' ).hide()
 	  //$("div#multiplayer-dropdown").hide()
 	  $("button.join").hide()
-	  
-      var socket = io.connect('localhost');
+      var socket = io.connect('CLIENTURL');
       socket.on( 'connect', function() {
 	    //alert(socket.io.engine.id)
         socket.emit( 'connected', {
