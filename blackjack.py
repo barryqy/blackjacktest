@@ -13,6 +13,7 @@ def prwarn(prt):
     print(f"\033[94m{prt}\033[00m")
 
 prwarn("#########!!!CLICK_LINK_BELOW_TO_PLAY_BLACKJACK!!!#########")
+prwarn(os.environ["DEVENV_APP_8080_URL"])
 prwarn("#"*58)
 
 #@app.route("/api", methods=['GET', 'POST'])
