@@ -25,15 +25,12 @@ prwarn("#"*58)
 #        response = {'message': 'Received POST request', 'data': data}
 #        return json.dumps(response)
     
-@app.route("/api/getstatejson", methods=['GET', 'POST'])
-def index():
+@app.route("/api/gamestatejson", methods=['GET', 'POST'])
+def gamestate():
     if request.method == 'GET':
         return GameBlackJack.getstatejson()
     elif request.method == 'POST':
-        data = request.json
-        # Process the data and return a response
-        response = {'message': 'Received POST request', 'data': data}
-        return json.dumps(response)
+        return GameBlackJack.poststatejson(request.json)
     
 @app.route("/api/startgame", methods=['POST'])
 def start():
