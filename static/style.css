@@ -1,0 +1,96 @@
+.card {
+  font-family:Helvetica !important;
+  line-height:1.0 !important;
+  
+  display: inline-block;
+  position: relative;
+  width: 5em;
+  height: 7em;
+  background-color: #ffffff;
+  box-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, 0.15);
+  border-radius: 0.25em;
+  margin-left: 5px;
+}
+.card.red {
+  color: red;
+}
+.card-topleft {
+  position: absolute;
+  top: 0.2em;
+  left: 0.65em;
+}
+.card-bottomright {
+  position: absolute;
+  bottom: 0.2em;
+  right: 0.65em;
+  transform: rotate(180deg);
+}
+.card-corner-rank, .card-corner-suit {
+  width: 2em;
+  text-align: center;
+  transform: translate(-50%, 0);
+}
+
+.card-face-down {
+	background-image: url(data:image/gif;base64,R0lGODlhJAAkAJEAAOjFsezdztOKbL5QKCH5BAAAAAAALAAAAAAkACQAAAL/HC4RAqm/mmLHyHmAbczB11Ea8ombJKSgKo6Z17pXFznmS1JptiX0z3vVhpEKDoUIkoa0olGIUeZUk1RI6Yn2mh/FDAt6frOrRRTqXPpsVLYugzxaVy+YcBdnoWPZOT0E4eckQtZFZBjWoHixQFWl6Nhol6R2p1Okt5TGaEWZA6fjiMdhZgPHeWrTWGVq+jTZg1HYyAEWKLYzmyiGKoUimilz+YYryyTlg5RcDJSAbNx0Q7lMcbIGEyzTK8zVdfVaImzs/QV+prYqWWW2ObkoOApM/Em/rUlIm7fijs8a2EEKEaZ3AsMUgneEU6RcpJbZ27aGHkAO2Ors8xQH1IR0Bn5YnOtVAAA7); /* image is "Pattern 069" from http://www.squidfingers.com/patterns/ */
+  display: inline-block;
+  position: relative;
+  width: 5em;
+  height: 7em;
+  background-color: #999999;
+  box-shadow: 0 0.0625em 0.125em rgba(0, 0, 0, 0.15);
+  border-radius: 0.25em;
+  margin-left: 5px;
+}
+
+body {
+  /* background-color: #AAAAAA; */
+  background-color: #76E19D;
+}
+
+div#multiplayer-dropdown
+{
+	margin-bottom:8px;
+	margin-left:5px;
+}
+div.deck_box
+{
+	float:left;
+	margin-right: 50px;
+}
+div.deck
+{
+	margin-top: 30px;
+	clear: left;	
+}
+div.deck_player_info, div.deck_player2_info, div.deck_house_info 
+{
+	text-align: left;	
+	margin-left: 5px;
+	padding-bottom: 10px;
+}
+div#playeractions
+{
+	text-align:left;
+	margin-left: 20px;
+	padding-top: 10px;
+}
+div#playeractions button
+{
+	margin-right: 10px;
+}
+.myturn
+{
+	color: green;
+	font-weight: bold;
+}
+
+div#output
+{
+	font-size: 16px;
+	color:#333333;
+}
+button#exit
+{
+	margin-left: 5px;
+}

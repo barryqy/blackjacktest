@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>XDR-Blackjack!</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='displaycards.js') }}"></script>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <!-- nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">Blackjack example</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav -->
+
+  <!-- Page Content -->
+  <div class="container" style="margin-top: 20px">
+    <div class="row">
+      <div class="col-lg-12 text-left">        
+        <p class="lead"></p>
+        
+		
+		<form id="gamestartform">
+			<div class="form-row align-items-center">
+			  <div class="col-auto">
+				<label class="sr-only" for="inlineFormInput">Name</label>
+				<input class="form-control mb-2" id="player_name" type="text" placeholder="Player name" value="Waiting for game to start" disabled>
+			  </div>
+			  <div class="col-auto">
+				<label class="sr-only" for="inlineFormInputGroup">Bet amount</label>
+				<div class="input-group mb-2">
+				  <div class="input-group-append">
+					<div class="input-group-text">$</div>
+				  </div>
+				  <input class="form-control" id="bet_amount" type="text" placeholder="Please enter your bet" value="50">
+				</div>
+			  </div>
+			  <div class="col-auto">
+				<div class="form-check mb-2">
+				  <input class="form-check-input" type="checkbox" id="multiplayer" >
+				  <label class="form-check-label" for="autoSizingCheck">
+					Ready to start?
+				  </label>
+				</div>
+			  </div>
+			  <div class="col-auto" >
+				<!--button type="submit" class="btn btn-primary mb-2 start" value="singleplayer">Play</button -->			  
+				<!-- button type="submit" class="btn btn-primary mb-2 join" value="multiplayergameid">Join multiplayer game</button -->
+				<button type="submit" class="btn btn-primary mb-2 join" value="multiplayergameid" >Join multiplayer game</button -->
+
+			<!--div id="multiplayer-dropdown" class="btn-group">
+			  <button type="button" class="btn btn-success dropdown-toggle multigameselect" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Join existing game
+			  </button>
+			  <div class="dropdown-menu">				
+			  </div>
+			</div -->
+
+			</div>
+		  </div>
+		  <input type="hidden" id="gameid" name="gameid" value="">
+			<input type="hidden" id="gametype" name="gametype" value="multiplayer">
+			<input type="hidden" id="pid" name="pid" value="">
+		</form>
+		<button type="button" class="btn btn-secondary" id="exit" hidden>
+				Change game
+		</button>
+
+		<div class="row">
+		  <div class="col-9">
+			<div class="deck">
+					<div class="deck_box">
+						<div class="deck_player_info"></div>
+						<div class="deck_player"></div>
+						<div id="playeractions">
+							  <button id="hit" value="hit" name="hit" class="action btn btn-success">Hit</button>
+							  <button id="stand" value="stand" name="stand" class="action btn btn-warning">Stand</button>
+						</div>
+					</div>
+					<div class="deck_box">
+						<div class="deck_player2_info"></div>
+						<div class="deck_player2"></div>
+					</div>
+					<div class="deck_box">
+						<div class="deck_house_info"></div>
+						<div class="deck_house"></div>
+					</div>
+				</div>
+		  </div>
+		  <div class="col-3">
+		  <div class="window">
+				<div id="output" class="terminal"></div>
+				<div id="error" class="terminal"></div>    
+				</div>
+		  </div>
+		</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="{{ url_for('static', filename='vendor/jquery/jquery.slim.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+  <!-- script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script-->
+  <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
+	<script type="text/javascript">
+	  $("#playeractions").hide()
+	  $("button.multigameselect").hide()
+	  $( 'button#exit' ).hide()
+	  //$("div#multiplayer-dropdown").hide()
+	  $("button.join").hide()
+	  
+      var socket = io.connect('localhost');
+      socket.on( 'connect', function() {
+	    //alert(socket.io.engine.id)
+        socket.emit( 'connected', {
+          data: 'User Connected'
+        } )
+
+		$("button.join").click(function(e) {		    
+		  $( 'div#output' ).prepend( '<div>clicked</div>' )
+		  socket.emit( 'join_game')
+
+		  socket.emit( 'list_multiplayer_games', {
+            player_name : player_name,
+			bet_amount : player_bet
+          } )
+		  
+		});
+      } )	  
+	  
+		$("button.action").click(function(e) {		    
+			e.preventDefault()
+			  let player_name = $( 'input#player_name' ).val()			  
+			  socket.emit( 'player_move', {
+				gameid: $( 'input#gameid' ).val(),
+				player_name : $( 'input#pid' ).val(),
+				action: $(this).val()
+			  } )
+		});
+		
+	  socket.on( 'player_move', function( msg ) {        
+		obj = JSON.parse(msg)		
+        updateCards(obj)
+		updateInfo(obj)
+		//$( 'div#output' ).prepend( '<div>'+obj.player_turn+' '+obj.action+'</div>' )
+      })
+	  
+      socket.on( 'my response', function( msg ) {
+        console.log( msg )
+        if( typeof msg.player_name !== 'undefined' ) {
+          $( 'h3' ).remove()
+          $( 'div#output' ).prepend( '<div>'+msg.player_name+' '+msg.message+'</div>' )
+        }
+      })
+	  
+	  socket.on( 'wait_others', function( msg ) {  
+		$( 'div#output' ).prepend( '<div>waiting for others ...</div>' )
+		$("#playeractions").hide()		
+      })
+	  
+	  socket.on( 'game_start', function( msg ) {
+		//$( 'form#gamestartform' ).hide() <--unhide this!!!!!!!!!
+		$( 'button#exit' ).show()
+		
+		obj = JSON.parse(msg)		
+        if( typeof obj.player !== 'undefined' ) {
+		  myturn = $('input#pid').val() == obj.player.name
+		  multiplayer = obj.player2 != null
+          //$( 'div#output' ).prepend( '<div>'+(multiplayer ? 'Multiplayer' : 'Singleplayer')+' game start</div><div>'+(myturn ? 'my' : obj.player.name)+' turn</div>' )
+		$( 'input#gameid' ).val(obj.gameid)
+		updateCards(obj)
+		updateInfo(obj)
+        }
+      })
+	  function updateCards(obj) {
+	    //alert(obj)
+	    multiplayer = obj.player2 != null
+		myturn = $('input#pid').val() == obj.player_turn
+		mefirst = !multiplayer || $('input#pid').val() == obj.player.name
+		
+		
+		$( 'div.deck_player' ).empty()
+		$( 'div.deck_player2' ).empty()
+		$( 'div.deck_house' ).empty()
+		$("#playeractions").hide()
+		
+		if(mefirst)
+		{
+			for(i=0;i<obj.player.hand.length;i++)
+			{
+				$( 'div.deck_player' ).append(createCard(obj.player.hand[i]));				
+			}
+			
+			if(multiplayer)
+			{
+				for(i=0;i<obj.player2.hand.length;i++)
+				{
+					$( 'div.deck_player2' ).append(createCard(obj.player2.hand[i]));				
+				}
+			}
+						
+		}
+		else
+		{
+			for(i=0;i<obj.player.hand.length;i++)
+			{
+				$( 'div.deck_player2' ).append(createCard(obj.player.hand[i]));				
+			}
+			for(i=0;i<obj.player2.hand.length;i++)
+			{
+				$( 'div.deck_player' ).append(createCard(obj.player2.hand[i]));				
+			}
+		}
+		$( 'div.deck_house' ).append(createCard(obj.house.hand[0]));		
+		
+		if(myturn)
+		{
+			$("#playeractions").show()
+		}		
+		
+		if(!obj.game_state)
+		{	
+			$("#playeractions").hide()
+			$( 'div#output' ).prepend( '<div>'+obj.msg+'</div>' )								
+			$("#playeractions").hide()
+			l = obj.house.hand.length-2+1
+			while(l>0)
+			{
+				$( 'div.deck_house' ).append(createCard(obj.house.hand[obj.house.hand.length-l]));
+				l--
+			}
+			
+			setTimeout(
+			  function() 
+			  {
+				  $( 'div.deck_player' ).empty()
+				  $( 'div.deck_player2' ).empty()
+				  $( 'div.deck_house' ).empty()
+				  // $( 'div#output' ).empty()
+				  
+				  if(mefirst)
+				  {				  
+					  socket.emit( 'game_restart', {					
+						gameid : obj.gameid,
+						bet: $( 'input#bet_amount' ).val() // that's a hack because the GUI for taking bets every round is not there yet
+					} )
+				  }
+				  
+			  }, 5000);
+			
+		}
+		else
+		{
+			$( 'div.deck_house' ).append(createCard(-1));
+		}
+
+	}
+	
+	socket.on( 'display_multiplayer_games', function( msg ) {	   
+	   obj = JSON.parse(msg)	
+		// $( 'div#output' ).prepend( '<div><b style="color: #000">'+obj.games+'</div>' )
+		//$("#playeractions").hide()	<--this was here don't know why, find out!!!!!!!
+		
+		$("div.dropdown-menu").empty()
+		for(i=0;i<obj.games.length;i++)
+		{
+			g = obj.games[i]
+			n = obj.names[i]
+			$("div.dropdown-menu").append("<a class=\"dropdown-item\" value=\""+g+"\">"+n+"</a>")
+			$( 'input#pid' ).val(n)	
+			$( 'input#gameid' ).val(g)	
+			$( 'input#player_name' ).val(n)  //<-----this sets playername on the input
+		}		
+		$("div#multiplayer-dropdown").show()
+      })
+	  
+	  function updateInfo(obj) {
+	    //alert(obj)
+	    multiplayer = obj.player2 != null
+		myturn = $('input#pid').val() == obj.player_turn
+		mefirst = !multiplayer || $('input#pid').val() == obj.player.name
+		
+		
+		$( 'div.deck_player_info' ).empty()
+		$( 'div.deck_player2_info' ).empty()
+		$( 'div.deck_house_info' ).empty()
+		//$("div#output").empty()
+		
+		if(mefirst)
+		{
+			// $( 'div.deck_player_info' ).append(obj.player.name+'<span class=\"badge\">'+obj.player.money+'$</span>')
+			$( 'div.deck_player_info' ).append(obj.player.name+" <span class=\"badge badge-secondary\">"+obj.player.money+"$</span>")
+			
+			if(multiplayer)
+			{
+				$( 'div.deck_player2_info' ).append(obj.player2.name+' <span class=\"badge badge-secondary\">'+obj.player2.money+'$</span>')
+			}
+		}
+		else
+		{
+			$( 'div.deck_player2_info' ).append(obj.player.name+' <span class=\"badge badge-secondary\">'+obj.player.money+'$</span>')
+			if(multiplayer)
+			{
+				$( 'div.deck_player_info' ).append(obj.player2.name+' <span class=\"badge badge-secondary\">'+obj.player2.money+'$</span>')
+			}
+		}
+		
+		if(myturn)
+		{
+			$( 'div.deck_player_info' ).addClass("myturn");
+		}
+		else
+		{
+			$( 'div.deck_player_info' ).removeClass("myturn");
+		}
+		
+		$( 'div.deck_house_info' ).append('House <span class=\"badge badge-secondary\">'+obj.house.money+'$</span>')
+	}
+	$("input#multiplayer").change(function() {
+		if(this.checked) {
+			//$("button.start").text("Start new game")
+			//$("button.join").show()
+		    socket.emit( 'join_game')
+			socket.emit( 'list_multiplayer_games' )
+		}
+		else
+		{
+			//$("button.start").text("Play")
+			$("button.join").hide()
+		}
+	});
+	$("button#exit").click(function() {
+		$( 'form#gamestartform' ).show()
+		$( 'button#exit' ).hide()
+	});
+	
+</script>
+</body>
+
+</html>
