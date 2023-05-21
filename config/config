@@ -1,1 +1,1 @@
-"{\"gameid\": \"test\", \"player_name\": \"Barry\", \"bet_amount\": \"50\", \"balance\": \"1000\"}"
+"{\"gameid\": \"test\", \"player_name\": \"Barry\", \"bet_amount\": 50, \"balance\": 1000}"
