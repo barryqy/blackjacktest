@@ -246,20 +246,26 @@ class GameBlackJack:
     
     @classmethod
     def getstatejson(cls):
-        file_list = glob(os.path.join(GameBlackJack.SESSIONS_DIR, "*"))
-        sorted_files = sorted(file_list, key=os.path.getmtime, reverse=True)
-        #filepath = Path('{}/{}'.format(GameBlackJack.SESSIONS_DIR, gameid))
-        with open(sorted_files[0], 'r') as filehandle:
-            return jsonpickle.encode(jsonpickle.decode(json.load(filehandle)), unpicklable=False)
+        try:
+            file_list = glob(os.path.join(GameBlackJack.SESSIONS_DIR, "*"))
+            sorted_files = sorted(file_list, key=os.path.getmtime, reverse=True)
+            #filepath = Path('{}/{}'.format(GameBlackJack.SESSIONS_DIR, gameid))
+            with open(sorted_files[0], 'r') as filehandle:
+                return jsonpickle.encode(jsonpickle.decode(json.load(filehandle)), unpicklable=False)
+        except Exception as e:
+            return "game not ready"
         
     @classmethod
     def poststatejson(cls, gamedata):
-        file_list = glob(os.path.join(GameBlackJack.SESSIONS_DIR, "*"))
-        sorted_files = sorted(file_list, key=os.path.getmtime, reverse=True)
-        #filepath = Path('{}/{}'.format(GameBlackJack.SESSIONS_DIR, gameid))
-        with open(sorted_files[0], 'w') as filehandle:
-            json.dump(jsonpickle.encode(gamedata), filehandle)
-            return True
+        try:
+            file_list = glob(os.path.join(GameBlackJack.SESSIONS_DIR, "*"))
+            sorted_files = sorted(file_list, key=os.path.getmtime, reverse=True)
+            #filepath = Path('{}/{}'.format(GameBlackJack.SESSIONS_DIR, gameid))
+            with open(sorted_files[0], 'w') as filehandle:
+                json.dump(jsonpickle.encode(gamedata), filehandle)
+                return True
+        except Exception as e:
+            return "game not ready"
         
     def __repr__(self):            
         return "\n{1} {2}".format(len(self.decks.decks)/48, self.house, self.players)
