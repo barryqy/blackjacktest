@@ -96,7 +96,7 @@ def joingame(methods=['GET', 'POST']):
         amount = int(gamedata['bet_amount'])
         debugout('{0} {1} joined. bet = {2} USD'.format(gameid, player_name, amount))
 
-        firstplayer = PlayerBlackJack(gamedata['player_name'], 1000)    
+        firstplayer = PlayerBlackJack(gamedata['player_name'], gamedata['balance'])    
         firstplayer.bet(int(gamedata['bet_amount']))  
         game = GameBlackJack(PlayerBlackJackHouse(), gameid = request.sid) #<----this request.sid is weird, find out why!!!!!!!!
         game.gameid=gameid
@@ -186,7 +186,7 @@ def playermove(data, methods=['GET', 'POST']):
         socketio.emit('player_move', json.dumps(payload), callback=messageReceived, room=game.gameid)
         return
     else: # player is finished. next player is selected   
-        writeconfig({"gameid": gameid, "player_name": name, "bet_amount": "50"})     # Write config at every turn!!!!!!!! TODO: validate
+        writeconfig({"gameid": gameid, "player_name": name, "bet_amount": "50", "balance": game.playerturn.money})     # Write config at every turn!!!!!!!! TODO: validate
         nextplayermove(game, action)
 
 def nextplayermove(game, previous_action):  
