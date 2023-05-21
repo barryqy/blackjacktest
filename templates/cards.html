@@ -201,6 +201,7 @@
 		  multiplayer = obj.player2 != null
           //$( 'div#output' ).prepend( '<div>'+(multiplayer ? 'Multiplayer' : 'Singleplayer')+' game start</div><div>'+(myturn ? 'my' : obj.player.name)+' turn</div>' )
 		$( 'input#gameid' ).val(obj.gameid)
+
 		updateCards(obj)
 		updateInfo(obj)
         }
@@ -208,7 +209,7 @@
 	  function updateCards(obj) {
 	    //alert(obj)
 	    multiplayer = obj.player2 != null
-		myturn = $('input#pid').val() == obj.player_turn
+		myturn = obj.player.name == obj.player_turn
 		mefirst = !multiplayer || $('input#pid').val() == obj.player.name
 		
 		
