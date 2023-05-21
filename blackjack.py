@@ -185,7 +185,8 @@ def playermove(data, methods=['GET', 'POST']):
         game.dumpstate()
         socketio.emit('player_move', json.dumps(payload), callback=messageReceived, room=game.gameid)
         return
-    else: # player is finished. next player is selected        
+    else: # player is finished. next player is selected   
+        writeconfig({"gameid": gameid, "player_name": name, "bet_amount": "50"})     # Write config at every turn!!!!!!!! TODO: validate
         nextplayermove(game, action)
 
 def nextplayermove(game, previous_action):  
