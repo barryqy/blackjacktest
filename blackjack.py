@@ -33,26 +33,28 @@ def gamestate():
     elif request.method == 'POST':
         return GameBlackJack.poststatejson(request.json)
     
-@app.route("/api/startgame", methods=['POST'])
-def start():
+@app.route("/api/config", methods=['GET','POST'])
+def config():
     if request.method == 'GET':
-        return GameBlackJack.getstatejson()
+        return readconfig()
     elif request.method == 'POST':
         gamedata = request.json
         print("gamestart")
         print(json.dumps(gamedata))
-        writeconfig(gamedata)
+        result = writeconfig(gamedata)
         # Process the data and return a response
-        response = {'message': 'Received POST request', 'data': gamedata}
+        response = {'message': result}
         return json.dumps(response)
 def writeconfig(data):
-    if(not os.path.isdir(GameBlackJack.CONFIG_DIR)):
-        os.mkdir(GameBlackJack.CONFIG_DIR)
-    filepath = Path('{}/{}'.format(GameBlackJack.CONFIG_DIR, 'config'))
-    with open(filepath, 'w') as filehandle:                        
-        json.dump(jsonpickle.encode(data), filehandle)
-        return True
-    
+    try:
+        if(not os.path.isdir(GameBlackJack.CONFIG_DIR)):
+            os.mkdir(GameBlackJack.CONFIG_DIR)
+        filepath = Path('{}/{}'.format(GameBlackJack.CONFIG_DIR, 'config'))
+        with open(filepath, 'w') as filehandle:                        
+            json.dump(jsonpickle.encode(data), filehandle)
+        return "Successful"
+    except Exception as e:
+        return "Failed"
 def readconfig():
     filepath = Path('{}/{}'.format(GameBlackJack.CONFIG_DIR, 'config'))
     with open(filepath, 'r') as filehandle:
