@@ -1,4 +1,4 @@
-import os
+import os, time, sys
 import jsonpickle,json
 from flask import Flask, render_template, request
 from pathlib import Path    # for dumping and reloading state of the game
@@ -107,7 +107,18 @@ def joingame(methods=['GET', 'POST']):
         debugout("{}: creates room {}".format(firstplayer.name, game.gameid))
         game.dumpstate() # save the game state
         #socketio.emit('wait_others', None, callback=messageReceived) # TODO: maybe unicast would be better here ...
-            
+        
+        #Wait for XDR to dump state to game
+        """
+        while game.deck_id == "":
+            for cursor in '\\|/-':
+            time.sleep(0.1)
+            # Use '\r' to move cursor back to line beginning
+            # Or use '\b' to erase the last character
+            sys.stdout.write('...Waiting for XDR\r{}'.format(cursor))
+            # Force Python to write data into terminal.
+            sys.stdout.flush()
+        """
         gamestart(game)
       
 def gamestart(game):

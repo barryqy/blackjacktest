@@ -353,6 +353,7 @@
 		if(this.checked) {
 			//$("button.start").text("Start new game")
 			//$("button.join").show()
+			$("input#multiplayer").addClass("readonly")
 		    socket.emit( 'join_game')
 			socket.emit( 'list_multiplayer_games' )
 		}
