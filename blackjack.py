@@ -59,10 +59,20 @@ def readconfig():
     filepath = Path('{}/{}'.format(GameBlackJack.CONFIG_DIR, 'config'))
     with open(filepath, 'r') as filehandle:
         return jsonpickle.decode(json.load(filehandle))
-    
+
+@app.route("/api/leader", methods=['Post'])
+def leader():
+    socketio.emit('leader_refresh', request.json)
+    response = {'message': "Success"}
+    return json.dumps(response)
+
 @app.route("/", methods=['GET'])
 def frontpage():    
     return render_template('cards.html')
+
+@app.route("/leader", methods=['GET'])
+def leader():
+    return render_template('leader.html')
     
 def messageReceived(methods=['GET', 'POST']):
     debugout('received.')

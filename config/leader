@@ -1,0 +1,43 @@
+[
+	{
+		name: 'Lewis Hamilton',
+		balance: 2360,
+		time: 31
+	}, {
+		name: 'Kimi Raikkonen',
+		balance: 2310,
+		time: 21
+	}, {
+		name: 'Sebastian Vettel',
+		balance: 1640,
+		time: 7
+	}, {
+		name: 'Max Verstappen',
+		balance: 1220,
+		time: 4
+	}, {
+		name: 'Lando Norris',
+		balance: 180,
+		time: 16
+	}, {
+		name: 'Charles Leclerc',
+		balance: 160,
+		time: 6
+	}, {
+		name: 'George Russell',
+		balance: 100,
+		time: 21
+	}, {
+		name: 'Daniel Ricciardo',
+		balance: 70,
+		time: 46
+	}, {
+		name: 'Alexander Albon',
+		balance: 40,
+		time: 2
+	}, {
+		name: 'Carlos Sainz Jr.',
+		balance: 10,
+		time: 24
+	}
+];
