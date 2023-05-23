@@ -700,7 +700,7 @@ const randomEmoji = () => {
 	return emojis[randomNumber]
 }
 socket.on( 'leader_refresh', function( msg ) {  
-  team = JSON.parse(msg)
+  team = msg
 
   rank = 0
   team.sort((a, b) => b.time - a.time)
