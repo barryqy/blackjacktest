@@ -61,7 +61,7 @@ def readconfig():
         return jsonpickle.decode(json.load(filehandle))
 
 @app.route("/api/leader", methods=['Post'])
-def leader():
+def leader_refresh():
     socketio.emit('leader_refresh', request.json)
     response = {'message': "Success"}
     return json.dumps(response)
