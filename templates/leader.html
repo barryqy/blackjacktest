@@ -676,7 +676,7 @@ button, select {
 
 <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
 <script type="text/javascript">
-var socket = io.connect('https://app-8080-5753289171944087471.devenv-stg.us-west-1.devnetcloud.com');
+var socket = io.connect('CLIENTURL');
 console.clear();
 function startTime() {
   const today = new Date();
