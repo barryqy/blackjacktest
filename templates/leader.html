@@ -676,7 +676,7 @@ button, select {
 
 <script src="{{ url_for('static', filename='socket.io.min.js') }}"></script>
 <script type="text/javascript">
-var socket = io.connect('CLIENTURL');
+var socket = io.connect('https://app-8080-5753289171944087471.devenv-stg.us-west-1.devnetcloud.com');
 console.clear();
 function startTime() {
   const today = new Date();
@@ -698,7 +698,14 @@ const randomEmoji = () => {
 	const emojis = ['👏','👍','🙌','🤩','🔥','⭐️','🏆','💯'];
 	let randomNumber = Math.floor(Math.random() * emojis.length);
 	return emojis[randomNumber]
+    }
+    
+function removeAllChildNodes(parent) {
+    while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+    }
 }
+
 socket.on( 'leader_refresh', function( msg ) {  
   team = msg
 
@@ -725,6 +732,7 @@ socket.on( 'leader_refresh', function( msg ) {
       </div>
     `;
     if(rank === 1) {
+	  removeAllChildNodes(list);
       newRow.querySelector('.c-place').classList.add('u-text--dark')
       newRow.querySelector('.c-place').classList.add('u-bg--yellow')
       newRow.querySelector('.c-kudos').classList.add('u-text--yellow')
@@ -751,9 +759,6 @@ socket.on( 'leader_refresh', function( msg ) {
   rank=0
   team.forEach(member => {
     rank = rank+1
-    if (rank === 1) {
-      return;
-    }
     let newRow = document.createElement('li');
     newRow.classList = 'c-list__item';
     newRow.innerHTML = `
@@ -772,9 +777,8 @@ socket.on( 'leader_refresh', function( msg ) {
       </div>
     `;
     if(rank === 1) {
-      newRow.querySelector('.c-place').classList.add('u-text--dark')
-      newRow.querySelector('.c-place').classList.add('u-bg--yellow')
-      newRow.querySelector('.c-kudos').classList.add('u-text--yellow')
+      removeAllChildNodes(winners);
+	  return;
     } else if(rank === 2) {
       newRow.querySelector('.c-place').classList.add('u-text--dark')
       newRow.querySelector('.c-place').classList.add('u-bg--teal')
