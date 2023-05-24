@@ -196,7 +196,7 @@ def playermove(data, methods=['GET', 'POST']):
         socketio.emit('player_move', json.dumps(payload), callback=messageReceived, room=game.gameid)
         return
     else: # player is finished. next player is selected   
-        writeconfig({"gameid": gameid, "player_name": name, "bet_amount": "50", "balance": game.playerturn.money})     # Write config at every turn!!!!!!!! TODO: validate
+        writeconfig({"gameid": gameid, "player_name": name, "bet_amount": int(50), "balance": int(game.playerturn.money)})     # Write config at every turn!!!!!!!! TODO: validate
         nextplayermove(game, action)
 
 def nextplayermove(game, previous_action):  
