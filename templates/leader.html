@@ -706,11 +706,26 @@ function removeAllChildNodes(parent) {
     }
 }
 
+function convertToMilliseconds(timeString) {
+  const [hours, minutes, seconds] = timeString.split(':');
+  return (parseInt(hours, 10) * 60 * 60 * 1000) +
+         (parseInt(minutes, 10) * 60 * 1000) +
+         (parseInt(seconds, 10) * 1000);
+}
+
 socket.on( 'leader_refresh', function( msg ) {  
   team = msg
 
   rank = 0
-  team.sort((a, b) => b.time - a.time)
+  if (typeof team[0].time === 'string') {
+    team.sort((a, b) => {
+      const timeA = convertToMilliseconds(a.time);
+      const timeB = convertToMilliseconds(b.time);
+    return timeA - timeB;
+    });
+  } else if (typeof team[0].time === 'number') {
+    team.sort((a, b) => b.time - a.time)
+  }
 
   team.forEach(member => {
     rank = rank+1
