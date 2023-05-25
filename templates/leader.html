@@ -678,6 +678,17 @@ button, select {
 <script type="text/javascript">
 var socket = io.connect('CLIENTURL');
 console.clear();
+
+var isSessionOn = true; // Variable to be updated when the button is pressed
+
+  // Get the button element by its ID
+  var button = document.getElementById("time");
+
+  // Add an event listener to the button
+  button.addEventListener("click", function() {
+    isSessionOn = !isSessionOn; // Update the variable to true when the button is pressed
+  });
+
 function startTime() {
   const today = new Date();
   let h = today.getHours();
@@ -685,7 +696,9 @@ function startTime() {
   let s = today.getSeconds();
   m = checkTime(m);
   s = checkTime(s);
-  document.getElementById('time').innerHTML =  h + ":" + m + ":" + s;
+  if (isSessionOn){
+    document.getElementById('time').innerHTML =  h + ":" + m + ":" + s;
+  };
   setTimeout(startTime, 1000);
 }
 
@@ -714,6 +727,7 @@ function convertToMilliseconds(timeString) {
 }
 
 socket.on( 'leader_refresh', function( msg ) {  
+  if (!isSessionOn) {return};
   team = msg
 
   rank = 0
